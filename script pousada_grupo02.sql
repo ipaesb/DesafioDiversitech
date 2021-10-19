@@ -12,10 +12,10 @@ CREATE TABLE `Clientes` (
 
 CREATE TABLE `Reservas` (
 	`id_reserva` INT NOT NULL AUTO_INCREMENT,
-	`nome_reserva` varchar(255) NOT NULL AUTO_INCREMENT,
-	`num_quarto` varchar(255) NOT NULL AUTO_INCREMENT,
-	`tipo_reserva` varchar(255) NOT NULL AUTO_INCREMENT,
-	`data_entrada` DATE NOT NULL AUTO_INCREMENT,
+	`nome_reserva` varchar(255) NOT NULL,
+	`num_quarto` varchar(255) NOT NULL,
+	`tipo_reserva` varchar(255) NOT NULL ,
+	`data_entrada` DATE NOT NULL,
 	`data_saida` DATE NOT NULL,
 	`status_reserva` varchar(255) NOT NULL,
 	`valor_total` FLOAT NOT NULL,
