@@ -1,3 +1,5 @@
+CREATE database pousada;
+use pousada;
 CREATE TABLE `Clientes` (
 	`id_cliente` INT NOT NULL AUTO_INCREMENT,
 	`nome` varchar(255) NOT NULL,
