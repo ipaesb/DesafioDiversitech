@@ -1,0 +1,158 @@
+# Ligação com o BD e Cadastra Clientes
+
+
+import pymysql.cursors
+import getpass
+
+
+#Informações para conectar ao banco de dados
+print(' ' * 31)
+print("Conectando com o banco dados")
+print(' ' * 31)
+print('Por favor, insira as informações abaixo: ')
+
+servidor= input ('Servidor: ')
+usuario = input('Usuário: ')
+senha = getpass.getpass('Senha: ')
+banco = input('Banco: ')
+
+#Conectando ao banco de dados
+
+conexao = pymysql.connect ( 
+        host = servidor , 
+        user = usuario , 
+        password = senha , 
+        database = banco , 
+        cursorclass=pymysql.cursors.DictCursor)
+   
+print(conexao)
+cursor = conexao.cursor
+  
+#Queries
+    #   Comandos para a pousada   
+# Cadastro do cliente
+
+def cadastro_cliente(cursor, nome, cpf, endereco, telefone, tipo_reserva, data_reserva):
+    nome = input("Informe o seu nome: \n")
+    cpf = input("Informe o seu cpf: \n")
+    endereco = input("Informe o seu endereco: \n")
+    telefone = input("Informe o seu telefone: \n")
+    tipo_reserva = input("Informe o tipo_reserva: \n")
+    data_reserva = input("Informe o data_reserva: \n")
+
+    #Inserindo no banco de dados
+    cadastro_cliente = f'''
+
+        INSERT INTO `pousada`.`cliente`(
+        `nome`,
+        `cpf`,
+        `endereco`
+        `telefone`
+        `tipo_reserva`
+        `data_reserva`
+        ) VALUES (
+        "{nome}",
+        "{cpf}",
+        "{endereco}"
+        "{telefone}"
+        "{tipo_reserva}"
+        "{data_reserva}"
+            );
+        '''
+
+    #Executando o comando de cadastro no BD
+    cursor.execute(cadastro_cliente)
+
+    #Salvando as alterações
+    conexao.commit()
+
+    #Fechando as conexões
+    cursor.close()
+    conexao.close()
+
+    #Informando ao usuário
+print(f'Cliente {nome} cadastrado com sucesso!') 
+
+
+# Consulta do cliente
+
+def consulta_cliente():
+    respostac = input("Escolha as opções a seguir para consulta:\n N- Consultar por nome do cliente\n CPF- Consultar pelo CPF do cliente \n ")
+    if respostac == "N":
+        nomec = input("Informe o nome completo do cliente: ")
+        consulta_cliente = f'''
+        SELECT *
+        FROM cliente
+        WHERE nome = "{nomec}"
+        ;
+        '''
+        print(consulta_cliente)
+        cursor.execute(consulta_cliente)
+        resultado = cursor.fetchall()
+    else:
+        cpfc = input("Informe o CPF do cliente (sem pontos): ")
+
+        consulta_cliente = f'''
+        SELECT *
+        FROM cliente
+        WHERE cpf = "{cpfc}"
+        ;
+        '''
+        print(consulta_cliente)
+        cursor.execute(consulta_cliente)
+        resultado = cursor.fetchall()
+
+        conexao.commit()
+print(f'Cliente {nomec} cadastrado com sucesso!') 
+
+
+# Deleção do cliente
+
+def deletar_cliente(cursor, nomed, cpfd):
+
+    # O usuário terá a opção de pesquisar por nome ou CPF do cliente
+    respostad = input("Escolha as opções a seguir para excluir o cliente:\n N- Consultar por nome do cliente\n CPF- Consultar pelo CPF do cliente \n ")
+    if respostad == "N":
+        nomed = input("Informe o nome completo do cliente: ")
+
+        deletar_cliente = f'''
+        DELETE FROM cliente
+        WHERE nome = "{nomed}"
+        ;
+        '''
+        print(deletar_cliente)
+        cursor.execute(deletar_cliente)
+    else:
+        cpfd = input("Informe o CPF do cliente (sem pontos): ")
+
+        deletar_cliente = f'''
+        DELETE FROM cliente
+        WHERE cpf = "{cpfd}"
+        ;
+        '''
+        print(deletar_cliente)
+        cursor.execute(deletar_cliente)
+        conexao.commit()
+        
+print(f'Cliente {nomed} excluído com sucesso!') 
+
+# Relatório dos quartos
+
+# Cadastrar quartos
+
+def cadastro_quarto( quarto, tipo_quarto):
+    quantidade = int(input("Informe a quantidade total de quartos da sua pousada: \n"))
+    type(quantidade)==int
+    a = 0
+    while (a < quantidade):
+        quarto = input(f'Informe se o quarto {a+1} é: \n 1. Casal \n 2. Solteiro \n')
+        tipo_quarto = input(f'Informe se o quarto {a+1} é: \n 1. Com suíte\n 2. Sem suíte \n')
+        input(f'Quarto {a+1} cadastrado! Tecle Enter para cadastrar o próximo ou finalizar o cadastro->')
+
+        print("*" * 30)
+        a = a + 1
+    else:
+        print("Cadastro concluído com sucesso!")
+        print("*" * 30)
+        resumo = {'Quarto: ', quarto, 'Tipo do quarto: ', tipo_quarto}
+cadastro_quarto()
