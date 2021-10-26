@@ -1,7 +1,6 @@
 def menu(): # função Menu
     print('seja bem vindo(a) ao sistema de pousada')
     op = ''
-    print(f' para começar escolha uma opção: ')
     while op <='3':
         print(f' para começar escolha uma opção:'
           f'\n 1- verificar quartos vazios e cheios \n 2- cadastrar cliente, \n 3- cadastro de quarto \n e outra para sair ')
