@@ -1,0 +1,256 @@
+# Ligação com o BD e Cadastra Clientes
+
+import pymysql.cursors
+import getpass
+
+def conecta_bd(conexao):
+
+    #Informações para conectar ao banco de dados
+    print(' ' * 31)
+    print("Conectando com o banco dados")
+    print(' ' * 31)
+    print('Por favor, insira as informações abaixo: ')
+
+    #Cliente preenche informações de acesso ao BD
+    servidor= input ('Servidor: ')
+    usuario = input('Usuário: ')
+    senha = getpass.getpass('Senha: ')
+    banco = input('Banco: ')
+
+    #Conectando ao banco de dados
+
+    conexao = pymysql.connect ( 
+        host = servidor , 
+        user = usuario , 
+        password = senha , 
+        database = banco , 
+        cursorclass=pymysql.cursors.DictCursor)
+    
+ 
+
+    print("Banco de dados conectado com sucesso!")   
+    return conexao
+
+
+#Queries
+
+    #   Comandos para a pousada  
+
+# Cadastro do cliente
+
+def cadastro_cliente(cursor, cpf, endereco, telefone, tipo_reserva, preco_reserva):
+
+    nome = input("Informe o seu nome: \n")
+    cpf = input("Informe o seu cpf: \n")
+    endereco = input("Informe o seu endereco: \n")
+    telefone = input("Informe o seu telefone: \n")
+    tipo_reserva = input("Informe o tipo da reserva: \n")
+    data_reserva = input("Informe a data da reserva: \n")
+    preco_reserva = input("Informe o preço da reserva: \n")
+
+
+        #Inserindo no banco de dados
+    cadastro_cliente = f'''
+
+        INSERT INTO `pousada`.`clientes`(
+        `nome`,
+        `cpf`,
+        `endereco`,
+        `telefone`,
+        `tipo_reserva`,  #Solteiro ou casal
+        `data_reserva`,
+        `preco_reserva`
+        ) VALUES (
+        "{nome}",
+        "{cpf}",
+        "{endereco}",
+        "{telefone}",
+        "{tipo_reserva}",
+        "{data_reserva}",
+        "{preco_reserva}"
+        );
+        '''
+
+        #Executando o comando de cadastro no BD
+    cursor.execute(cadastro_cliente)
+
+        #Informando ao usuário
+    print(f'Cliente {nome} cadastrado com sucesso!') 
+    print("-" * 30)
+    return None
+
+
+# Consulta do cliente
+def consulta_cliente(cursor, nomec, cpfc):
+    respostac = input("Escolha as opções a seguir para consulta:\n N- Consultar por nome do cliente\n CPF- Consultar pelo CPF do cliente \n ")
+    if respostac == "N": #Teste da escolha do cliente para Nome
+        nomec = input("Informe o nome completo do cliente: ")
+        consulta_cliente = f'''
+        SELECT * FROM clientes
+        WHERE nome = '{nomec}'
+        '''
+        print(consulta_cliente)
+        cursor.execute(consulta_cliente)
+        resultado = cursor.fetchone()
+
+    else: #Teste da escolha do cliente para CPF
+        cpfc = input("Informe o CPF do cliente (sem pontos): ")
+        #Código busca no banco de dados tudo o que se refere ao CPF digitado
+        consulta_cliente = f'''    
+        SELECT * FROM clientes
+        WHERE cpf = {cpfc}          
+        '''
+        print(consulta_cliente)
+        cursor.execute(consulta_cliente)
+        resultado = cursor.fetchone()
+
+
+    print("Seguem abaixo os dados do cliente:")
+
+    print('-'*50)
+    print('Nome: ', resultado['nome'])
+    print(f'CPF: ', resultado['cpf'])
+    print(f'Telefone:', resultado['telefone'])
+    print('Endereço: ', resultado['endereco'])
+    print('Tipo da reserva:', resultado['tipo_reserva'])
+    print('Data da reserva:', resultado['data_reserva'])
+    print('Preço da reserva:', resultado['preco_reserva'])
+    print('-'*50)
+    print(f'Cliente consultado com sucesso!') 
+
+    return None
+
+
+# Deleção do cliente
+def deletar_cliente(cursor, nomed, cpfd):
+
+    # O usuário terá a opção de pesquisar por nome ou CPF do cliente
+    respostad = input("Escolha as opções a seguir para excluir o cliente:\n N- Consultar por nome do cliente\n CPF- Consultar pelo CPF do cliente \n ")
+    if respostad == "N":
+        nomed = input("Informe o nome completo do cliente: ")
+
+        deletar_cliente = f'''
+        DELETE FROM clientes
+        WHERE nome = "{nomed}"
+        ;
+        '''
+        print(deletar_cliente)
+        cursor.execute(deletar_cliente)
+    else:
+        cpfd = input("Informe o CPF do cliente (sem pontos): ")
+
+        deletar_cliente = f'''
+        DELETE FROM clientes
+        WHERE cpf = "{cpfd}"
+        ;
+        '''
+        
+        cursor.execute(deletar_cliente)
+    print(f'Cliente excluído com sucesso!') 
+
+    return None
+            
+
+
+# Relatório dos quartos
+
+def relatorio(cursor):
+    relatorio = f'''
+
+        SELECT *
+        FROM reservas
+
+        '''
+
+    print(relatorio) 
+    cursor.execute(relatorio)
+    tudo = cursor.fetchall()
+    print(tudo)
+
+    for dic in tudo:
+        print('-'*50)
+        print('ID: ', dic['id_reserva'])
+        print('ID: ', dic['id_reserva'])
+        print('Nome: ', dic['num_quarto'])
+        print('ID: ', dic['id_reserva'])
+        print('ID: ', dic['id_reserva'])
+        print('ID: ', dic['id_reserva'])
+        if dic['status_reserva'] == None:
+            print("Quarto disponível")
+        else:
+            print('ID: ', dic['status_reserva'])
+        print('-'*50)
+    print("Relatório exibido com sucesso")
+    return None      
+
+
+
+# Cadastrar reserva
+
+def cadastro_reserva(cursor, nome_reserva, num_quarto, tipo_reserva, data_entrada, data_saida, status_reserva, valor_total):
+    nome_reserva =str(input('Qual reserva você escolhe?'))
+    if('Simples'):
+        print('Reserva Simples')
+    elif('Master'):
+        print('Reserva Master')
+    elif('Presidencial'):
+        print('Reserva Presidencial')
+    else : 
+        print('Digite o numero do quarto?')
+
+    num_quarto = input('Digite o numero do quarto'),
+    tipo_reserva =str(input('Adicione o tipo de Reserva?'))
+    if('Diaria'):
+        print('Pernoite')
+    elif('Diaria'):
+        print('Diaria')
+    elif('Semanal'):
+        print('Semanal')
+    else:
+        print('Qual a data de entrada?')
+    data_entrada = input('Digite a data de Entrada'),
+    data_saida = input('Digite a data de Saída'),
+    status_reserva = input('Informe o Status da Reserva'),
+    valor_total = input('Informe o Valor Total')
+
+    cadastro_reserva = f'''
+    INSERT INTO 'pousada','reservas'( 
+    'nome_reserva',
+    'num_quarto',
+    'tipo_reserva',
+    'data_entrada',
+    'data_saida',
+    'status_reserva',
+    'valor_total'
+    ) VALUES (
+        "{nome_reserva}",
+        "{num_quarto}",
+        "{tipo_reserva}",
+        "{data_entrada}",
+        "{data_saida}",
+        "{status_reserva}",
+        "{valor_total}"
+    )
+    '''
+
+    #Executando o comando de cadastro no BD
+    cursor.execute(cadastro_reserva)
+
+    #Informando ao usuário
+    print(f'Quarto {nome_reserva} cadastrado com sucesso!') 
+    return None
+
+    # Consultar Quarto
+
+def consulta_quarto():
+    nome_reserva =str(input('Qual reserva você deseja consultar?'))
+    if('Simples'):
+        print('Reserva Simples')
+    elif('Master'):
+        print('Reserva Master')
+    elif('Presidencial'):
+        print('Reserva Presidencial')
+    else : 
+        print('Digite o numero do quarto?')
+    return None
+
