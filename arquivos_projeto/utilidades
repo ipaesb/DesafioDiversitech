@@ -1,0 +1,69 @@
+import os
+import banco_dados
+   
+conexao = banco_dados.conecta_bd()
+cursor = conexao.cursor()
+
+
+def menu(): # função Menu
+    print('Seja bem vindo(a) ao sistema de pousada\n')
+    op = ''
+    
+    while op <='7':
+        print(f' Para começar escolha uma opção:'
+          f'\n 1- Relatório de quartos \n 2- Cadastrar cliente, \n 3 - Consultar cliente \n, 4- Excluir cliente \n, 5- Cadastro de quarto \n, 6- Consultar quarto\n e S para sair ')
+        print("\n")
+        op = input("digite uma opção: ") # pega a opção q o usuario digitar
+
+        if op == '1':
+            os.system('cls')
+            # chama a função de verificação
+            print("Verificando quartos vazios e cheios")
+            conexao = banco_dados.relatorio(cursor)
+            conexao.commit() #Salvado as alterações
+            
+        elif op == '2':
+            os.system('cls')
+            # chama a função de cadastro de cliente
+            print("...Cadastrando clientes")
+            conexao = banco_dados.cadastro_cliente(cursor)
+            conexao.commit() #Salvado as alterações
+
+        elif op == '3':
+            os.system('cls')
+            # chama a função de consulta de cliente
+            print("...Consultando clientes")
+            conexao = banco_dados.consulta_cliente(cursor)
+            conexao.commit() #Salvado as alterações
+
+        elif op == '4':
+            os.system('cls')
+            # chama a função de deletar cliente
+            print("...Excluir clientes")
+            conexao = banco_dados.deletar_cliente(cursor)
+            conexao.commit() #Salvado as alterações
+
+        elif op == '5':
+            os.system('cls')
+            # chama a função de cadastro de quartos
+            print("...Cadastrando reserva")
+            conexao = banco_dados.cadastro_reserva(cursor)
+            conexao.commit() #Salvado as alterações
+
+        elif op == '6':
+            os.system('cls')
+            # chama a função de cadastro de cliente
+            print("...Consultando quarto")
+            conexao = banco_dados.consulta_quarto(cursor)
+            conexao.commit() #Salvado as alterações
+        else:
+            print("saindo, obrigado , volte sempre")
+            #Fechando as conexões
+
+            cursor.close()
+            conexao.close()
+
+
+    # chamada da função meunu
+
+menu()
