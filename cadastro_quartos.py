@@ -1,6 +1,6 @@
 # Ligação com o BD e Cadastra Clientes
 
-
+'''
 import pymysql.cursors
 import getpass
 
@@ -27,6 +27,7 @@ conexao = pymysql.connect (
    
 print(conexao)
 cursor = conexao.cursor
+'''
 
 
 # Cadastro de Quartos
@@ -137,7 +138,7 @@ def cadastro_quarto(nome_reserva, num_quarto, tipo_reserva, data_entrada, data_s
             cursor.execute(nome_reserva)
             conexao.commit()
 
-print(f'Quarto {nomed} excluído com sucesso!')
+print(f'Quarto {None} excluído com sucesso!')
 
 
 
